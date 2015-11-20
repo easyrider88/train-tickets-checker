@@ -10,7 +10,7 @@ var halfAnHour = 1800000;
 
 var halfAminute = 30000;
 
-setInterval(_doWork, halfAnHour);
+setInterval(_doWork, halfAminute);
 
 function _doWork(){
   req(url, function (err, res, body) {
