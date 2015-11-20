@@ -33,7 +33,7 @@ function _sendEmails(receivers, msg){
     };
 
     var headers = {};
-    headers['whereTheQuestionsWhereTheAnswers'] = 'WhoLetTheDogOUT!Raf!';
+    headers[process.env.SECRET_HEADER] = process.env.SECRET;
     req({
       method: "PUT",
       uri: email_url + ',' + email,
