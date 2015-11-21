@@ -1,6 +1,8 @@
 var req = require('request');
 var cheerio = require('cheerio');
 var twillio = require('twilio')('AC98b30c9900dca0548f5c074b6471dd8c', '51392b4f1bf2a34d2b1bee234532fec5');
+var http = require('http');
+var fs = require('fs');
 
 var url = 'https://dprc.gov.ua/show.php?transport_type=2&src=22204001&dst=22218000&dt=2015-12-29&ret_dt=2001-01-01&ps=ec_privat';
 var email_url = 'https://node-emailer.herokuapp.com/wbserg@gmail.com';
@@ -15,6 +17,7 @@ var halfAnHour = 1800000;
 
 var halfAminute = 30000;
 
+_startServer();
 setInterval(_doWork, halfAnHour);
 
 function _doWork(){
@@ -108,4 +111,11 @@ function _isNeededTrainExists(trains, trainNum){
   });
 
   return exist;
+};
+
+function _startServer(){
+  http.createServer(function (req, res) {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end();
+  }).listen(8081);
 };
