@@ -1,8 +1,7 @@
 var req = require('request');
 var cheerio = require('cheerio');
 var twillio = require('twilio')('AC98b30c9900dca0548f5c074b6471dd8c', '51392b4f1bf2a34d2b1bee234532fec5');
-var http = require('http');
-var fs = require('fs');
+var express = require('express');
 
 var url = 'https://dprc.gov.ua/show.php?transport_type=2&src=22204001&dst=22218000&dt=2015-12-29&ret_dt=2001-01-01&ps=ec_privat';
 var email_url = 'https://node-emailer.herokuapp.com/wbserg@gmail.com';
@@ -17,7 +16,9 @@ var halfAnHour = 1800000;
 
 var halfAminute = 30000;
 
+console.log('starting server...');
 _startServer();
+console.log('starting interval...');
 setInterval(_doWork, halfAnHour);
 
 function _doWork(){
@@ -114,8 +115,15 @@ function _isNeededTrainExists(trains, trainNum){
 };
 
 function _startServer(){
-  http.createServer(function (req, res) {
-    res.writeHead(200, {'Content-Type': 'text/plain'});
+  var app = express();
+  var port = process.env.PORT || 1111;
+
+  app.get('/', function(req, res, next) {
+    res.send('how are you doing?');
     res.end();
-  }).listen(8081);
+  });
+
+  console.log('express server listenning on port: %d', port);
+  // start app
+  app.listen(port);
 };
