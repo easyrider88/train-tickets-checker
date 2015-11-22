@@ -8,7 +8,7 @@ var email_url = 'https://node-emailer.herokuapp.com/wbserg@gmail.com';
 
 var receivers = ['mistery3q@gmail.com'];
 
-var phones = ['+380637492161', '+380953343786'];
+var phones = ['+380637492161'];
 
 var neededTrain = '115О';
 
@@ -27,16 +27,27 @@ function _doWork(){
       var html = cheerio.load(body);
       var tables = html('#tables').html();
 
-      console.log('checking needed train 115 O');
       var trains = [];
-      html('#tables .info_row.train').each(function(i, el){
-        trains.push(html(this).text());
+      var trainRows = html('#tables .train_row');
+      trainRows.each(function(i, el){
+        var num = html(this).find('.train').text();
+        var seats = 0;
+        seats += parseInt(html(this).find('.c_1050 .sts').text()) || 0;
+        seats += parseInt(html(this).find('.c_1040 .sts').text()) || 0;
+        seats += parseInt(html(this).find('.c_1030 .sts').text()) || 0;
+        seats += parseInt(html(this).find('.c_1025 .sts').text()) || 0;
+        seats += parseInt(html(this).find('.c_1020 .sts').text()) || 0;
+
+        trains.push({num: num, seats: seats});
       });
+
+      console.log('checking needed train 115 O');
+
       console.log(trains);
+
       if (_isNeededTrainExists(trains, neededTrain)) {
-        phones.forEach(function(phone) {
-          _sendSms(phone);
-        });
+        console.log('needed train 115 O exist');
+        phones.forEach(_sendSms);
       } else {
         console.log('needed train 115 O not exist');
       }
@@ -80,8 +91,8 @@ function _sendSms(phone){
   twillio.sendMessage({
 
       to: phone, // Any number Twilio can deliver to
-      from: '+16502496493', // A number you bought from Twilio and can use for outbound communication
-      body: 'Есть места на нужный нам поезд 115 O' // body of the SMS message
+      from: '+14692083415', // A number you bought from Twilio and can use for outbound communication
+      body: 'Есть больше 4х мест на нужный нам поезд 115 O' // body of the SMS message
 
   }, function(err, responseData) { //this function is executed when a response is received from Twilio
 
@@ -106,7 +117,7 @@ function _sendSms(phone){
 function _isNeededTrainExists(trains, trainNum){
   var exist = false;
   trains.forEach(function (t){
-    if (t == trainNum) {
+    if (t.num == trainNum && t.seats >= 4) {
       exist = true;
     }
   });
