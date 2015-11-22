@@ -8,7 +8,7 @@ var email_url = 'https://node-emailer.herokuapp.com/wbserg@gmail.com';
 
 var receivers = ['mistery3q@gmail.com'];
 
-var phones = ['+380637492161'];
+var phones = ['+380637492161', '+380953343786'];
 
 var neededTrain = '115О';
 
